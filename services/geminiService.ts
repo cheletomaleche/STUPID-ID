@@ -4,8 +4,10 @@ import { ComplianceResult } from '../types';
 // Initialize Gemini Client
 const getClient = () => {
   const apiKey = process.env.API_KEY;
+  
   if (!apiKey) {
-    throw new Error("API Key not found in environment variables");
+    console.error("API Key is missing. Please set API_KEY in your environment variables.");
+    throw new Error("API Key not found. Please check your settings.");
   }
   return new GoogleGenAI({ apiKey });
 };

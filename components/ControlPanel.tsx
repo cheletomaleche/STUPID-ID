@@ -27,8 +27,8 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ activeTab, onApplyStyle, on
     setSliderValues(prev => ({ ...prev, [key]: val }));
   };
 
-  const handleFaceEditCommit = (key: string) => {
-    const val = sliderValues[key as keyof typeof sliderValues];
+  const handleFaceEditCommit = (key: keyof typeof sliderValues) => {
+    const val = sliderValues[key];
     let prompt = "";
     
     if (val >= 45 && val <= 55) return; 
