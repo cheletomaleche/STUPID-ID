@@ -3,21 +3,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>STUPID ID</title>
+    <title>stupID</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         theme: {
           extend: {
             colors: {
-              // Pantone 4289 C is approx #49493F. 
-              // We create a dark theme palette based on this warm grey/olive tone.
               grey: {
-                950: '#1c1c18', // Very dark for main bg
-                900: '#2b2b24', // Main background (Dark Olive Grey)
-                800: '#3a3a32', // Panel background
-                700: '#49493f', // Pantone 4289 C (Base)
-                600: '#636356', // Lighter elements
+                950: '#1c1c18',
+                900: '#2b2b24',
+                800: '#3a3a32',
+                700: '#49493f',
+                600: '#636356',
               },
               gold: {
                 400: '#cca43b',
@@ -33,14 +31,16 @@
   "imports": {
     "react/": "https://aistudiocdn.com/react@^19.2.0/",
     "react": "https://aistudiocdn.com/react@^19.2.0",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0"
   }
 }
 </script>
 </head>
   <body class="bg-grey-900 text-slate-200 antialiased h-screen w-screen overflow-hidden">
     <div id="root" class="h-full w-full"></div>
+    <!-- Critical Fix: Entry point for Vite -->
+    <script type="module" src="./index.tsx"></script>
   </body>
 </html>

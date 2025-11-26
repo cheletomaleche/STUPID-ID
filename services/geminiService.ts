@@ -3,6 +3,7 @@ import { ComplianceResult } from '../types';
 
 // Initialize Gemini Client
 const getClient = () => {
+  // Use process.env.API_KEY exclusively as per guidelines.
   const apiKey = process.env.API_KEY;
   
   if (!apiKey) {
@@ -20,9 +21,8 @@ export const editIdPhoto = async (
   promptInstruction: string
 ): Promise<string> => {
   const ai = getClient();
-  const model = 'gemini-2.5-flash-image'; // Using flash-image for faster edits
+  const model = 'gemini-2.5-flash-image'; 
 
-  // Remove data URL prefix if present for the API call
   const cleanBase64 = imageBase64.replace(/^data:image\/(png|jpeg|jpg|webp);base64,/, '');
 
   try {
@@ -49,11 +49,8 @@ export const editIdPhoto = async (
           }
         ]
       },
-      // We don't use responseMimeType here because we want the model to generate the image bytes
-      // effectively, but for gemini-2.5-flash-image, we look for inlineData in response.
     });
 
-    // Check for image in response
     const candidates = response.candidates;
     if (candidates && candidates.length > 0) {
       for (const part of candidates[0].content.parts) {
@@ -76,7 +73,7 @@ export const editIdPhoto = async (
  */
 export const checkCompliance = async (imageBase64: string): Promise<ComplianceResult> => {
   const ai = getClient();
-  const model = 'gemini-2.5-flash'; // Flash is sufficient for analysis
+  const model = 'gemini-2.5-flash';
 
   const cleanBase64 = imageBase64.replace(/^data:image\/(png|jpeg|jpg|webp);base64,/, '');
 
