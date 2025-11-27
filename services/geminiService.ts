@@ -3,12 +3,11 @@ import { ComplianceResult } from '../types';
 
 // Initialize Gemini Client
 const getClient = () => {
-  // CRITICAL FIX: For Vercel/Vite, we must use import.meta.env.VITE_API_KEY
-  // We allow process.env.API_KEY as a fallback for other environments
-  const apiKey = (import.meta as any).env.VITE_API_KEY || process.env.API_KEY;
+  // The API key must be obtained exclusively from the environment variable process.env.API_KEY.
+  const apiKey = process.env.API_KEY;
   
   if (!apiKey) {
-    console.error("API Key is missing. Please set VITE_API_KEY in your Vercel environment variables.");
+    console.error("API Key is missing. Please set API_KEY in your environment variables.");
     throw new Error("API Key not found. Please check your settings.");
   }
   return new GoogleGenAI({ apiKey });
