@@ -113,7 +113,6 @@ const App: React.FC = () => {
         reset();
         return;
     }
-    // Direct reset for smoother UX on button click
     reset(); 
   };
 
@@ -150,14 +149,14 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="h-screen w-full bg-grey-900 text-slate-200 relative overflow-hidden flex flex-col">
+    <div className="h-screen w-full bg-grey-900 text-slate-200 relative overflow-hidden flex flex-col font-cambria">
       <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileUpload} />
 
       {/* 1. Welcome Screen */}
       {!state.currentImage && (
         <div className="flex-1 flex flex-col relative animate-in fade-in duration-500">
            <div className="absolute top-0 left-0 w-full p-6 flex justify-between items-center z-10">
-              <h1 className="text-2xl font-bold tracking-tight text-white">stup<span className="text-gold-400">ID</span></h1>
+              <h1 className="text-2xl font-bold tracking-tight text-white">stup<span className="text-gold-400">ID</span> EASY</h1>
            </div>
            <div className="flex-1 flex flex-col items-center justify-center p-6 text-center space-y-8">
               <div className="w-24 h-24 bg-grey-800 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(204,164,59,0.2)] border border-grey-700 mb-4 animate-pulse">
@@ -185,7 +184,7 @@ const App: React.FC = () => {
          <div className="flex-1 flex flex-col relative animate-in slide-in-from-right duration-300">
             <div className="absolute top-0 left-0 w-full p-6 flex justify-between items-center z-10">
                 <button onClick={handleStartOver} className="text-xl font-bold tracking-tight text-white hover:opacity-80 flex items-center gap-2">
-                    <Home size={20} className="text-gold-400" /> stup<span className="text-gold-400">ID</span>
+                    <Home size={20} className="text-gold-400" /> stup<span className="text-gold-400">ID</span> EASY
                 </button>
                 <button onClick={handleStartOver} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-grey-800 text-slate-300 hover:text-gold-400 hover:bg-grey-700 transition-all border border-transparent hover:border-gold-400/30">
                   <ImagePlus size={18} />
@@ -214,7 +213,7 @@ const App: React.FC = () => {
         <div className="flex-1 flex flex-col h-full animate-in fade-in duration-300">
           <header className="h-16 flex items-center justify-between px-4 border-b border-grey-700 bg-grey-900 z-20 flex-shrink-0">
             <button onClick={handleStartOver} className="text-lg font-bold text-white hover:opacity-80 transition-opacity">
-                stup<span className="text-gold-400">ID</span>
+                stup<span className="text-gold-400">ID</span> EASY
             </button>
             <div className="flex items-center gap-3">
               <button onClick={handleStartOver} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-grey-800 text-slate-300 hover:text-gold-400 hover:bg-grey-700 transition-all border border-transparent hover:border-gold-400/30 mr-2" title="Upload New Photo">

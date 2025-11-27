@@ -3,12 +3,15 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>stupID</title>
+    <title>stupID EASY</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         theme: {
           extend: {
+            fontFamily: {
+              'cambria': ['Cambria', 'Cochin', 'Georgia', 'Times', 'Times New Roman', 'serif'],
+            },
             colors: {
               grey: {
                 950: '#1c1c18',
@@ -38,7 +41,7 @@
 }
 </script>
 </head>
-  <body class="bg-grey-900 text-slate-200 antialiased h-screen w-screen overflow-hidden">
+  <body class="bg-grey-900 text-slate-200 antialiased h-screen w-screen overflow-hidden font-cambria">
     <div id="root" class="h-full w-full"></div>
     <!-- Critical Fix: Entry point for Vite -->
     <script type="module" src="./index.tsx"></script>

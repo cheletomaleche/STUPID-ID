@@ -44,7 +44,7 @@ const ExportModal: React.FC<ExportModalProps> = ({ imageBase64, onClose, onReset
     if (!option) {
       const link = document.createElement('a');
       link.href = imageBase64;
-      link.download = `stupID-Original-${Date.now()}.jpg`;
+      link.download = `stupID_EASY-Original-${Date.now()}.jpg`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -125,7 +125,7 @@ const ExportModal: React.FC<ExportModalProps> = ({ imageBase64, onClose, onReset
 
       const link = document.createElement('a');
       link.href = canvas.toDataURL('image/jpeg', 0.95);
-      link.download = `stupID-${option.label.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.jpg`;
+      link.download = `stupID_EASY-${option.label.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.jpg`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);

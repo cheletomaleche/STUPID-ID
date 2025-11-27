@@ -54,3 +54,13 @@ export interface FaceConfig {
   smile: number; // 0-100
   eyes: number; // 0-100
 }
+
+export interface FacePreset {
+  id: string;
+  name: string;
+  values: {
+    slim: number;
+    smile: number;
+    eyes: number;
+  };
+}

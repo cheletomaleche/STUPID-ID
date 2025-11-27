@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { AppTab, StylingOption, Gender } from '../types';
+import React, { useState, useEffect } from 'react';
+import { AppTab, StylingOption, Gender, FacePreset } from '../types';
 import { 
   HAIR_OPTIONS, HAIR_COLORS,
   OUTFIT_OPTIONS, OUTFIT_COLORS,
   BACKGROUND_OPTIONS, 
   BEARD_OPTIONS 
 } from '../constants';
-import { Sparkles, Smile, Eye, User, Palette } from 'lucide-react';
+import { Sparkles, Smile, Eye, User, Palette, Save, Plus, Trash2, X, Check } from 'lucide-react';
 
 interface ControlPanelProps {
   activeTab: AppTab;
@@ -22,6 +22,71 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ activeTab, onApplyStyle, on
     smile: 50,
     eyes: 50
   });
+
+  // Preset State
+  const [presets, setPresets] = useState<FacePreset[]>([]);
+  const [isSavingPreset, setIsSavingPreset] = useState(false);
+  const [newPresetName, setNewPresetName] = useState('');
+
+  // Load presets from local storage on mount
+  useEffect(() => {
+    const savedPresets = localStorage.getItem('stupid_id_presets');
+    if (savedPresets) {
+      try {
+        setPresets(JSON.parse(savedPresets));
+      } catch (e) {
+        console.error("Failed to parse presets", e);
+      }
+    }
+  }, []);
+
+  const handleSavePreset = () => {
+    if (!newPresetName.trim()) return;
+    
+    const newPreset: FacePreset = {
+      id: Date.now().toString(),
+      name: newPresetName.trim(),
+      values: { ...sliderValues }
+    };
+
+    const updatedPresets = [...presets, newPreset];
+    setPresets(updatedPresets);
+    localStorage.setItem('stupid_id_presets', JSON.stringify(updatedPresets));
+    
+    setNewPresetName('');
+    setIsSavingPreset(false);
+  };
+
+  const handleDeletePreset = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const updatedPresets = presets.filter(p => p.id !== id);
+    setPresets(updatedPresets);
+    localStorage.setItem('stupid_id_presets', JSON.stringify(updatedPresets));
+  };
+
+  const handleApplyPreset = (preset: FacePreset) => {
+    setSliderValues(preset.values);
+    // Trigger the prompt generation logic for all three values
+    // Note: In a real scenario, we might want to debounce this or have a separate "Apply Preset" button
+    // to avoid 3 separate API calls. For now, we update visual state.
+    // To actually apply to the image, the user would need to nudge a slider or we can trigger one composite prompt.
+    
+    // Composite prompt for preset application
+    let promptParts = [];
+    if (preset.values.slim > 55) promptParts.push("refine jawline for a slimmer look");
+    if (preset.values.slim < 45) promptParts.push("make face slightly fuller");
+    
+    if (preset.values.smile > 55) promptParts.push("add a gentle, confident smile");
+    if (preset.values.smile < 45) promptParts.push("make expression more serious");
+    
+    if (preset.values.eyes > 55) promptParts.push("enhance eye focus and alertness");
+    if (preset.values.eyes < 45) promptParts.push("soften the gaze");
+
+    if (promptParts.length > 0) {
+      const fullPrompt = `Adjust face: ${promptParts.join(", ")}. Maintain identity and ID standards.`;
+      onApplyFaceEdit(fullPrompt);
+    }
+  };
 
   const handleSliderChange = (key: keyof typeof sliderValues, val: number) => {
     setSliderValues(prev => ({ ...prev, [key]: val }));
@@ -46,7 +111,8 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ activeTab, onApplyStyle, on
 
     if (prompt) {
       onApplyFaceEdit(prompt);
-      setSliderValues(prev => ({ ...prev, [key]: 50 })); 
+      // We keep the slider value visual to show current state, 
+      // rather than resetting to 50 immediately, so users know what they applied.
     }
   };
 
@@ -163,9 +229,67 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ activeTab, onApplyStyle, on
 
   const renderFaceControls = () => (
     <div className="flex flex-col gap-4 px-2 py-2 w-full max-w-md mx-auto h-full overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-grey-700">
+      
+      {/* Presets Section */}
+      <div className="mb-2">
+        <div className="flex justify-between items-center mb-2 pl-1">
+          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+            Saved Moods <Save size={12} />
+          </h3>
+          <button 
+            onClick={() => setIsSavingPreset(!isSavingPreset)}
+            className="text-[10px] text-gold-400 hover:text-white flex items-center gap-1 transition-colors"
+          >
+            {isSavingPreset ? <X size={12}/> : <Plus size={12}/>}
+            {isSavingPreset ? 'Cancel' : 'New Preset'}
+          </button>
+        </div>
+
+        {isSavingPreset && (
+          <div className="flex gap-2 mb-3 animate-in fade-in slide-in-from-top-1 duration-200">
+            <input 
+              type="text"
+              value={newPresetName}
+              onChange={(e) => setNewPresetName(e.target.value)}
+              placeholder="Preset Name (e.g., Friendly Smile)"
+              className="flex-1 bg-grey-800 text-white text-xs px-3 py-2 rounded-lg border border-grey-700 focus:border-gold-400 focus:outline-none"
+              autoFocus
+            />
+            <button 
+              onClick={handleSavePreset}
+              disabled={!newPresetName.trim()}
+              className="bg-gold-500 text-grey-900 p-2 rounded-lg hover:bg-gold-400 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Check size={16} />
+            </button>
+          </div>
+        )}
+
+        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+          {presets.length === 0 && !isSavingPreset && (
+            <span className="text-[10px] text-slate-600 italic pl-1">No saved presets yet. Configure sliders and click + to save.</span>
+          )}
+          {presets.map(preset => (
+            <div 
+              key={preset.id}
+              onClick={() => handleApplyPreset(preset)}
+              className="flex-shrink-0 flex items-center gap-2 bg-grey-800 hover:bg-grey-700 border border-grey-700 hover:border-gold-400/50 rounded-full px-3 py-1.5 cursor-pointer transition-all group"
+            >
+              <span className="text-[10px] font-medium text-slate-300 group-hover:text-gold-400">{preset.name}</span>
+              <button 
+                onClick={(e) => handleDeletePreset(preset.id, e)}
+                className="text-slate-500 hover:text-red-400 transition-colors"
+              >
+                <X size={10} />
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div className="space-y-3">
         <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider pl-1 flex items-center gap-2">
-          Mood Control <Sparkles size={12} className="text-gold-400 animate-pulse" />
+          Manual Adjustments <Sparkles size={12} className="text-gold-400 animate-pulse" />
         </h3>
         {renderSlider('smile', 'Expression', 'Serious', 'Gentle Smile', <Smile size={14} />)}
         {renderSlider('eyes', 'Eye Focus', 'Soft', 'Alert & Sharp', <Eye size={14} />)}

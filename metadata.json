@@ -1,5 +1,5 @@
 {
-  "name": "stupID",
+  "name": "stupID ",
   "description": "A professional AI-powered ID photo consultant and editor. Transform a single photo into various professional styles for passports, resumes, and licenses.",
   "requestFramePermissions": [
     "camera"
